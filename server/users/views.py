@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from .models import User
-from .serializers import RegisterSerializer, UserDetailSerializer, UserUpdateSerializer
+from .serializers import UserSerializer, UserDetailSerializer, UserUpdateSerializer
 
 class RegisterUserView(views.APIView):
     def get(self, request):
@@ -15,25 +15,38 @@ class RegisterUserView(views.APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
+        errors = {}
+
+        try:
+            username = request.data['username']
+        except KeyError:
+            errors['username'] = ['username is required']
+
+        
+        try:
+            username = request.data['email']
+        except KeyError:
+            errors['email'] = ['email is required']
+
         try:
             password = request.data['password']
         except KeyError:
-            response = {'password': ['This field is required']}
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            errors['password'] = ['password is required']
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
         
         try:
             password2 = request.data['password2']
         except KeyError:
-            response = {'password2': ['This field is required']}
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            errors['password2'] = ['password2 is required']
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 
         if password != password2:
-            response = {'password': ['Passwords do not match']}
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            errors['password2'] = ['passwords don\'t match']
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 
         request.data.pop('password2')
 
-        serializer = RegisterSerializer(data=request.data)
+        serializer = UserSerializer(data=request.data)
 
         if serializer.is_valid():
             serializer.save()
