@@ -1,0 +1,9 @@
+export const AUTH_SUCCESS = "AUTH_SUCCESS";
+export const AUTH_ERROR = "AUTH_ERROR";
+export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
+export const CREATE_ALERTS = "CREATE_ALERTS";
+export const CLEAR_ALERTS = "CLEAR_ALERTS";
+export const UPDATE_ACCESS_TOKEN = "UPDATE_ACCESS_TOKEN";
+export const LOAD_USER = "LOAD_USER";
+export const LOGOUT = "LOGOUT";
+export const UPDATE_PROFILE = "UPDATE_PROFILE";
